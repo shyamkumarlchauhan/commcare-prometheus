@@ -9,12 +9,11 @@ scrape_configs:
   - job_name: 'node_exporter'
     scrape_interval: 5s
     static_configs:
-      - targets:
-      {% for host in groups['node_exporter'] %}
-      {% if inventory_hostname != host %}
-        - '{{ host }}:9100'
-      {% endif %}
-      {% endfor %}
+    {% for host in groups['node_exporter'] %}
+      - targets: ['{{ host }}:9100']
+        labels:
+          instance: '{{ hostvars[host].hostname }}' 
+    {% endfor %}
 
 rule_files:
   - alert.rules.yml
@@ -24,7 +23,5 @@ alerting:
   - static_configs:
     - targets:
     {% for host in groups['alertmanager'] %}
-    {% if inventory_hostname != host %}
       - '{{ host }}:9093'
-    {% endif %}
     {% endfor %}

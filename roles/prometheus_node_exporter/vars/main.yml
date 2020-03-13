@@ -2,5 +2,5 @@
 serviceName: "node_exporter"
 userId: "node_exporter"
 groupId: "node_exporter"
-exec_command: /usr/local/bin/node_exporter
+exec_command: /usr/local/bin/node_exporter --collector.textfile.directory=/var/lib/node_exporter/textfile_collector
 version: 0.16.0

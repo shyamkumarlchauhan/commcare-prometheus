@@ -1,11 +1,30 @@
 groups:
-- name: alert.rules
+- name: Prometheus
   rules:
-  - alert: InstanceDown
-    expr: up == 0
-    for: 1m
+  - alert: PrometheusConfigurationReloadFailure
+    expr: prometheus_config_last_reload_successful != 1
+    for: 5m
     labels:
-      severity: "critical"
+      severity: warning
     annotations:
-      summary: "Endpoint {{ $labels.instance }} down"
-      description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 1 minutes."
+      summary: "Prometheus configuration reload failure (instance {{ $labels.instance }})"
+      description: "Prometheus configuration reload error\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+
+  - alert: PrometheusExporterDown
+    expr: up == 0
+    for: 5m
+    labels:
+      severity: error
+    annotations:
+      summary: "Prometheus Exporter down (instance {{ $labels.instance }})"
+      description: "Prometheus exporter down\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+
+  - alert: PrometheusRuleEvaluationFailures
+    expr: increase(prometheus_rule_evaluation_failures_total[3m]) > 0
+    for: 5m
+    labels:
+      severity: error
+    annotations:
+      summary: "Prometheus rule evaluation failures (instance {{ $labels.instance }})"
+      description: "Prometheus encountered {{ $value }} rule evaluation failures, leading to potentially ignored alerts.\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+

@@ -1,11 +1,12 @@
 [prometheus]
-18.219.214.78
+100.71.188.129
 
 [node_exporter]
-18.222.105.189
+100.71.188.129 hostname=nicbackup
+100.71.185.6 hostname=redis7
 
 [alertmanager]
-18.219.214.78
+100.71.188.129
 
 [grafana]
-18.223.203.246
+100.71.188.129
